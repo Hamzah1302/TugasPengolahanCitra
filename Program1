@@ -1,0 +1,49 @@
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Load image from the given path with error handling
+def load_image(image_path):
+    image = cv2.imread(image_path)
+    if image is None:
+        raise FileNotFoundError(f"Gambar tidak ditemukan di path: {image_path}")
+    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Visualize R, G, B channels
+def visualize_rgb_channels(image):
+    R, G, B = cv2.split(image)
+    zeros = np.zeros(image.shape[:2], dtype="uint8")
+    
+    # Plot each channel
+    plt.figure(figsize=(10, 10))
+    channels = [(R, 'Red'), (G, 'Green'), (B, 'Blue')]
+    for i, (channel, title) in enumerate(channels, 1):
+        plt.subplot(2, 2, i)
+        merged_image = cv2.merge([channel if title == 'Red' else zeros, 
+                                  channel if title == 'Green' else zeros, 
+                                  channel if title == 'Blue' else zeros])
+        plt.imshow(merged_image)
+        plt.title(f'{title} Channel')
+        plt.axis('off')
+    
+    # Show original image
+    plt.subplot(2, 2, 4)
+    plt.imshow(image)
+    plt.title('Original Image')
+    plt.axis('off')
+    plt.show()
+
+# Main function for Program 1
+def main_program_1():
+    try:
+        # Load the image
+        image = load_image('drive/MyDrive/Vespa2.jpg')
+        
+        # Visualize RGB channels
+        visualize_rgb_channels(image)
+
+    except FileNotFoundError as e:
+        print(e)
+
+if __name__ == "__main__":
+    main_program_1()
